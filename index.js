@@ -1,1 +1,1 @@
-module.exports = require("./bin/zee.js");
+module.exports = require("./bin/mangani.js");

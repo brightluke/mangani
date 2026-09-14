@@ -1,18 +1,32 @@
 {
-    "name": "zee-cli",
-    "version": "1.0.0",
-    "description": "Zee CLI - A lightweight project starter for ZeeJs",
+    "name": "@bmk24/mangani",
+    "version": "0.1.0",
+    "description": "A lightweight, offline-first project builder from BMK24.",
     "main": "index.js",
     "bin": {
-      "zee": "./bin/zee.js"
+        "mangani": "./bin/mangani.js"
     },
     "scripts": {
-      "start": "node bin/zee.js"
+        "start": "node ./bin/mangani.js",
+        "test": "node --test"
     },
-    "keywords": ["cli", "zeejs", "project-starter"],
-    "author": "Your Name",
+    "keywords": [
+        "cli",
+        "zeejs",
+        "project-starter"
+    ],
+    "author": "Bright Musanya <brightluke>",
     "license": "MIT",
-    "dependencies": {},
-    "preferGlobal": true
-  }
-  
+    "preferGlobal": true,
+    "engines": {
+        "node": ">=20"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/brightluke/mangani.git"
+    },
+    "bugs": {
+        "url": "https://github.com/brightluke/mangani/issues"
+    },
+    "homepage": "https://github.com/brightluke/mangani#readme"
+}

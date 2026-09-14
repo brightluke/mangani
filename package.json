@@ -1,32 +1,41 @@
 {
-    "name": "@bmk24/mangani",
-    "version": "0.1.0",
-    "description": "A lightweight, offline-first project builder from BMK24.",
-    "main": "index.js",
-    "bin": {
-        "mangani": "./bin/mangani.js"
-    },
-    "scripts": {
-        "start": "node ./bin/mangani.js",
-        "test": "node --test"
-    },
-    "keywords": [
-        "cli",
-        "zeejs",
-        "project-starter"
-    ],
-    "author": "Bright Musanya <brightluke>",
-    "license": "MIT",
-    "preferGlobal": true,
-    "engines": {
-        "node": ">=20"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/brightluke/mangani.git"
-    },
-    "bugs": {
-        "url": "https://github.com/brightluke/mangani/issues"
-    },
-    "homepage": "https://github.com/brightluke/mangani#readme"
+  "name": "@bmk24/mangani",
+  "version": "0.1.0",
+  "description": "A lightweight, offline-first project builder from BMK24.",
+  "main": "index.js",
+  "bin": {
+    "mangani": "./bin/mangani.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "start": "node ./bin/mangani.js",
+    "test": "node --test",
+    "check": "node --check ./bin/mangani.js && node --check ./src/cli.js && node --check ./src/create-project.js && node --check ./src/template.js"
+  },
+  "keywords": [
+    "bmk24",
+    "cli",
+    "offline-first",
+    "project-starter",
+    "scaffolding",
+    "zambia"
+  ],
+  "author": "Bright Musanya",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brightluke/mangani.git"
+  },
+  "bugs": {
+    "url": "https://github.com/brightluke/mangani/issues"
+  },
+  "homepage": "https://github.com/brightluke/mangani#readme"
 }

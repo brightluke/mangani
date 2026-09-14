@@ -1,187 +1,94 @@
+# MANGANI
 
+> **Build here. Build with less.**
 
-# **ZeeJS – The Future of High-Speed Web Development** ⚡  
+MANGANI is a lightweight, offline-first project builder from BMK24. It creates a small web project that can be opened, read and changed without downloading a framework or depending on an internet connection.
 
-### **A next-generation framework combining JavaScript, Java, and Python for ultra-fast, scalable, and network-efficient applications.**  
+The name comes from the Nyanja root *kumanga* — to build.
 
-![ZeeJS Banner](https://st5.depositphotos.com/54433710/71747/v/450/depositphotos_717476526-stock-illustration-planet-earth-icon-flat-design.jpg)  
+## Status
 
----
+MANGANI is being rebuilt as version 0.1. The current implemented surface is intentionally small and honest:
 
-## **🌍 What is ZeeJS?**  
+- Create a dependency-free web starter.
+- Show CLI help.
+- Show the installed version.
+- Reject unsafe project paths.
+- Refuse to overwrite existing work.
 
-**ZeeJS** is an innovative, high-performance framework built for:  
-✔ **Ultra-fast web applications** 🏎  
-✔ **Multi-middleware architecture** for seamless API handling 🔄  
-✔ **Full-stack interoperability** between **PHP, JavaScript, Java, and Python** 🧩  
-✔ **Optimized for large-scale projects** with **low bandwidth usage** 📡  
-✔ **Network-strong packet transits** for **faster response times** 📶  
+Commands such as `mangani dev` and `mangani build` are planned; they are not implemented yet.
 
-> **Powerful, lightweight, and designed for the future of high-speed, distributed computing.**  
+## Requirements
 
----
+- Node.js 20 or newer
+- npm for installation or local development
 
-## **🚀 Key Features**  
+Generated projects have no runtime dependencies and require no network connection.
 
-### ⚡ **Multi-Language Middleware**  
-- JavaScript for front-end speed 🏆  
-- Java for enterprise-grade processing 💪  
-- Python for AI/ML and data-driven backend 📊  
-- PHP for Database backend 📊  
+## Development setup
 
-### 🔥 **Super Scalability**  
-Built for large applications with:  
-- Efficient **memory management**  
-- **Optimized request handling** to reduce server load  
-- **Parallel processing** for high-performance execution  
-
-### 📡 **Network Efficiency**  
-- Uses **low-bandwidth protocols**  
-- Supports **real-time data processing**  
-- Reduces **latency and overhead** for stronger **packet transits**  
-
-### 🏗 **Middleware Support**  
-- Supports Express.js, FastAPI, Spring Boot, and more  
-- Custom **middleware integrations** for **auth, security, and logging**  
-
----
-
-## **📦 Installation**  
-
-### **1️⃣ Install ZeeJS CLI (Recommended)**
 ```sh
-npm install -g zee-cli
+git clone https://github.com/brightluke/mangani.git
+cd mangani
+git switch rebuild/v0.1
+npm test
+npm link
 ```
-or use `npx` (without global install):  
+
+## Usage
+
 ```sh
-npx zee-cli create myProject
+mangani create my-project
+cd my-project
 ```
 
-### **2️⃣ Install ZeeJS Manually**
+Then open `src/index.html` in a browser.
+
+Other available commands:
+
 ```sh
-npm install zeejs --save
-```
-or  
-```sh
-yarn add zeejs
+mangani --help
+mangani --version
 ```
 
----
+A generated project contains:
 
-## **🛠️ Getting Started**  
-
-### **1️⃣ Create a New ZeeJS Project**
-```sh
-zee create myProject
-cd myProject
+```text
+my-project/
+├── README.md
+├── mangani.config.json
+└── src/
+    ├── app.js
+    ├── index.html
+    └── styles.css
 ```
 
-### **2️⃣ Install Dependencies**
-```sh
-zee install
-```
+## Principles
 
-### **3️⃣ Start the Development Server**
-```sh
-zee start
-```
+1. **Build with less.** The first template has no external packages or CDN assets.
+2. **Readable by beginners.** Generated code should explain itself through its structure.
+3. **Safe by default.** MANGANI rejects path traversal and never overwrites an existing project.
+4. **Claims follow proof.** A feature is documented as available only after it exists and is tested.
+5. **Useful on ordinary hardware.** The tool is designed for students, small teams and constrained environments.
 
-### **4️⃣ Generate an API Route**
-```sh
-zee generate api users
-```
+## v0.1 boundary
 
-### **5️⃣ Deploy the Application**
-```sh
-zee deploy
-```
+Version 0.1 is a reliable project creator, not a complete web framework. Its job is to turn one command into a clean working starting point.
 
----
+## Roadmap
 
-## **🔗 Example Usage**  
+- `mangani dev`: local development server
+- `mangani build`: production output
+- Additional project templates
+- KIT00 and ESP32 dashboard template
+- Component and page generators
 
-### **JavaScript API Route**
-```js
-const { Router } = require('zeejs');
+Roadmap items are intentions, not current features.
 
-const router = new Router();
+## Project history
 
-router.get('/users', (req, res) => {
-    res.json({ message: "Hello from ZeeJS!" });
-});
+MANGANI began as ZeeJS. The final pre-rebuild state is preserved in Git as `zeejs-v1.0.0`. Development continues under the MANGANI name from version 0.1.
 
-module.exports = router;
-```
+## License
 
-### **Java Service**
-```java
-@RestController
-@RequestMapping("/api")
-public class ZeeService {
-    @GetMapping("/users")
-    public String getUsers() {
-        return "{\"message\": \"Hello from ZeeJS Java!\"}";
-    }
-}
-```
-
-### **Python Middleware**
-```python
-from zee.middleware import ZeeMiddleware
-
-def check_auth(request):
-    if "Authorization" not in request.headers:
-        return {"error": "Unauthorized"}, 401
-    return None
-
-ZeeMiddleware.register(check_auth)
-```
-
----
-
-## **📊 Benchmarks**
-✅ **50% faster request processing** compared to traditional frameworks  
-✅ **60% lower bandwidth usage** for heavy network applications  
-✅ **80% improved scalability** for large-scale projects  
-
----
-
-## **🔐 Security & Authentication**  
-- Built-in **JWT authentication**  
-- **Rate limiting** for API protection  
-- **Encryption for secure transactions**  
-
----
-
-## **💡 Why Choose ZeeJS?**
-✅ **Multi-language power** (JS, Java, Python)  
-✅ **Ultra-fast response times** ⏩  
-✅ **Efficient network handling** 📶  
-✅ **Lightweight, scalable, and modular** 🔄  
-
----
-
-## **📜 License**
-**MIT License** – Free to use, modify, and distribute.  
-
----
-
-## **🤝 Contributing**
-ZeeJS is open-source and welcomes contributions.  
-- **Fork the repository**  
-- **Submit a pull request**  
-- **Improve documentation, features, and performance**  
-
----
-
-### **🚀 ZeeJS – The Next Big Thing in Web Development!**  
-
----
-
-### **🔹 Updates & Improvements:**
-✅ **More structured installation steps**  
-✅ **More CLI commands for easier use**  
-✅ **More precise ZeeJS deployment steps**  
-✅ **Clearer usage for different programming languages**  
-
-Let me know if you need any further tweaks! 🚀
+MIT © 2026 Bright Musanya / BMK24

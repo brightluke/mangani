@@ -8,40 +8,82 @@ The name comes from the Nyanja root *kumanga* — to build.
 
 ## Status
 
-MANGANI v0.4 adds safe structure generation:
+MANGANI v0.5 adds deliberate project templates through one stable core.
 
-- `mangani create <project-name>` creates a dependency-free web starter.
-- `mangani dev` serves the project, watches source files and live-reloads connected browsers.
-- `mangani build` creates safe static production output.
-- `mangani generate page <name>` adds a page structure under `src/pages/`.
-- `mangani generate component <name>` adds a component structure under `src/components/`.
+Available templates:
 
-Generated structures never overwrite an existing target.
+```text
+basic
+dashboard
+```
 
-## Requirements
+The default remains `basic`.
 
-- Node.js 20 or newer
-- npm for package installation or local development
+## Create a basic project
 
-Generated projects require no package install and no network connection.
-
-## Create a project
+These commands are equivalent:
 
 ```sh
-mangani create my-project
-cd my-project
+mangani create my-site
+mangani create my-site --template basic
 ```
+
+The basic template remains the small dependency-free starter used by earlier MANGANI releases.
+
+## Create a dashboard project
+
+```sh
+mangani create ops-panel --template dashboard
+```
+
+The dashboard starter includes:
+
+```text
+ops-panel/
+├── README.md
+├── mangani.config.json
+└── src/
+    ├── app.js
+    ├── index.html
+    ├── styles.css
+    └── components/
+        └── status-card/
+            └── status-card.js
+```
+
+It is plain HTML, CSS and JavaScript with no runtime dependencies and no network requirement.
+
+## Template registry
+
+Template names are resolved through MANGANI's internal registry. They are not treated as filesystem paths.
+
+Unknown templates fail cleanly:
+
+```text
+MANGANI: Unknown template "react". Available templates: basic, dashboard
+```
+
+v0.5 does not support remote templates, custom template directories or third-party template loading.
+
+## Project configuration
+
+New projects record the selected template:
+
+```json
+{
+  "name": "ops-panel",
+  "template": "dashboard",
+  "entry": "src/index.html",
+  "output": "dist"
+}
+```
+
+Existing projects created before v0.5 do not need migration. A configuration without `template` remains valid for development, generation and builds.
 
 ## Develop
 
 ```sh
 mangani dev
-```
-
-Default development address:
-
-```text
-http://127.0.0.1:3000
 ```
 
 Custom port:
@@ -50,79 +92,16 @@ Custom port:
 mangani dev --port 4000
 ```
 
-MANGANI watches the configured source tree and reloads connected browsers through its development-only Server-Sent Events channel.
+Both built-in templates work with the same development server and live reload system.
 
-## Generate a page
+## Generate
 
 ```sh
 mangani generate page about
-```
-
-Creates:
-
-```text
-src/pages/about/
-├── app.js
-├── index.html
-└── styles.css
-```
-
-The page is intentionally standalone. v0.4 does not add routing or modify the application's main entry automatically.
-
-## Generate a component
-
-```sh
 mangani generate component navbar
 ```
 
-Creates:
-
-```text
-src/components/navbar/
-├── navbar.css
-├── navbar.html
-└── navbar.js
-```
-
-MANGANI creates the component files but does not automatically import or mount the component. The developer remains in control of integration.
-
-## Generator safety
-
-Generator names may contain:
-
-```text
-letters
-numbers
-hyphens
-underscores
-```
-
-They must begin with a letter or number.
-
-Examples:
-
-```text
-about
-user_profile
-top-nav
-card2
-```
-
-Unsafe names and nested paths are rejected.
-
-If the target already exists:
-
-```text
-target missing
-    ↓
-CREATE
-
-target exists
-    ↓
-REFUSE
-```
-
-v0.4 has no `--force` option.
+Generation remains independent of the selected starter template.
 
 ## Build
 
@@ -130,12 +109,12 @@ v0.4 has no `--force` option.
 mangani build
 ```
 
-MANGANI copies the configured source tree into the configured production output. The development reload runtime is not included in builds.
+Both templates use the same safe static build system and ownership marker.
 
 ## CLI
 
 ```text
-mangani create <project-name>
+mangani create <project-name> [--template <template>]
 mangani dev [--port <port>]
 mangani build
 mangani generate <page|component> <name>
@@ -151,28 +130,27 @@ mangani --version
 4. **Claims follow proof.** Features are documented as available only after implementation and tests.
 5. **Useful on ordinary hardware.** MANGANI remains suitable for constrained and offline environments.
 
-## v0.4 boundary
-
-Version 0.4 proves that MANGANI can safely grow an existing project.
+## v0.5 boundary
 
 Included:
 
-- page generation
-- component generation
-- generator name validation
-- source-tree placement
-- overwrite protection
-- CLI integration
+- template registry
+- `basic` template
+- `dashboard` template
+- `--template` support on `mangani create`
+- template identity in new project configuration
+- backward compatibility with older configs
+- dev/build compatibility for both templates
 - tests and CI
 
 Not included:
 
-- automatic routing
-- automatic imports
-- component runtime
-- shorthand `mangani g`
-- templates
-- KIT00 / ESP32 integration
+- third-party templates
+- remote template downloads
+- custom template directories
+- template marketplace
+- KIT00 / ESP32 template
+- React, Vue, Svelte or similar framework starters
 - TypeScript or JSX transforms
 - deployment automation
 - plugin systems
@@ -184,7 +162,8 @@ MANGANI began as ZeeJS. The final pre-rebuild state is preserved in Git as `zeej
 - v0.1 established safe project creation.
 - v0.2 added development serving and production output.
 - v0.3 added the continuous developer loop.
-- v0.4 adds safe page and component generation.
+- v0.4 added safe page and component generation.
+- v0.5 adds deliberate project templates.
 
 ## License
 

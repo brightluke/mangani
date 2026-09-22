@@ -9,17 +9,24 @@ const {
   startDevServer
 } = require("./dev-server");
 const { generate } = require("./generate");
+const {
+  DEFAULT_TEMPLATE,
+  listTemplates
+} = require("./templates");
 
 const HELP = `MANGANI ${packageInfo.version}
 Build here. Build with less.
 
 Usage:
-  mangani create <project-name>
+  mangani create <project-name> [--template <template>]
   mangani dev [--port <port>]
   mangani build
   mangani generate <page|component> <name>
   mangani --help
   mangani --version
+
+Templates:
+  ${listTemplates().join(", ")}
 
 Commands:
   create     Create a dependency-free starter project
@@ -33,6 +40,38 @@ function defaultIO() {
     out: (message) => console.log(message),
     error: (message) => console.error(message)
   };
+}
+
+function parseCreateArgs(args) {
+  const [projectName, ...rest] = args;
+
+  if (!projectName) {
+    throw new Error(
+      "Usage: mangani create <project-name> [--template <template>]"
+    );
+  }
+
+  if (rest.length === 0) {
+    return {
+      projectName,
+      template: DEFAULT_TEMPLATE
+    };
+  }
+
+  if (
+    rest.length === 2 &&
+    rest[0] === "--template" &&
+    rest[1]
+  ) {
+    return {
+      projectName,
+      template: rest[1]
+    };
+  }
+
+  throw new Error(
+    "Usage: mangani create <project-name> [--template <template>]"
+  );
 }
 
 function parseDevArgs(args) {
@@ -72,21 +111,30 @@ async function run(
   }
 
   if (command === "create") {
-    const [projectName, ...extra] = rest;
+    let parsed;
 
-    if (!projectName || extra.length > 0) {
-      io.error("Usage: mangani create <project-name>");
+    try {
+      parsed = parseCreateArgs(rest);
+    } catch (error) {
+      io.error(error.message);
       return 1;
     }
 
     try {
-      const projectPath = await createProject(projectName, {
-        cwd: options.cwd || process.cwd()
-      });
+      const projectPath = await createProject(
+        parsed.projectName,
+        {
+          cwd: options.cwd || process.cwd(),
+          template: parsed.template
+        }
+      );
 
-      io.out(`Created ${projectName}`);
+      io.out(`Created ${parsed.projectName}`);
+      io.out(`Template: ${parsed.template}`);
       io.out(`Location: ${projectPath}`);
-      io.out(`Next: cd ${projectName} && mangani dev`);
+      io.out(
+        `Next: cd ${parsed.projectName} && mangani dev`
+      );
       return 0;
     } catch (error) {
       io.error(`MANGANI: ${error.message}`);
@@ -185,6 +233,7 @@ async function run(
 
 module.exports = {
   HELP,
+  parseCreateArgs,
   parseDevArgs,
   run
 };

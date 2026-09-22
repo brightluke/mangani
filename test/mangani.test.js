@@ -35,7 +35,7 @@ function captureIO() {
 
 test("exports the MANGANI package identity", () => {
   assert.equal(packageInfo.name, "@bmk24/mangani");
-  assert.equal(packageInfo.version, "0.1.0");
+  assert.equal(packageInfo.version, "0.2.0");
   assert.equal(packageInfo.bin.mangani, "./bin/mangani.js");
 });
 
@@ -43,10 +43,12 @@ test("prints help and version", async () => {
   const help = captureIO();
   assert.equal(await run(["--help"], help.io), 0);
   assert.match(help.out.join("\n"), /Build here\. Build with less\./);
+  assert.match(help.out.join("\n"), /mangani dev/);
+  assert.match(help.out.join("\n"), /mangani build/);
 
   const version = captureIO();
   assert.equal(await run(["--version"], version.io), 0);
-  assert.deepEqual(version.out, ["0.1.0"]);
+  assert.deepEqual(version.out, ["0.2.0"]);
 });
 
 test("creates a complete offline starter", async (t) => {

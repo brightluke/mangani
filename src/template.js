@@ -16,7 +16,8 @@ function createTemplate(name) {
 
 Created with MANGANI.
 
-Open \`src/index.html\` in a browser to begin.
+Run \`mangani dev\` to serve the project locally.
+Run \`mangani build\` to create production output in \`dist/\`.
 `,
     "mangani.config.json": `${JSON.stringify(
       {

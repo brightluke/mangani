@@ -3,7 +3,11 @@
 const packageInfo = require("../package.json");
 const { buildProject } = require("./build-project");
 const { createProject } = require("./create-project");
-const { DEFAULT_PORT, parsePort, startDevServer } = require("./dev-server");
+const {
+  DEFAULT_PORT,
+  parsePort,
+  startDevServer
+} = require("./dev-server");
 
 const HELP = `MANGANI ${packageInfo.version}
 Build here. Build with less.
@@ -17,7 +21,7 @@ Usage:
 
 Commands:
   create    Create a dependency-free starter project
-  dev       Serve the current MANGANI project locally
+  dev       Serve, watch and live-reload the current project
   build     Create safe static production output
 `;
 
@@ -45,18 +49,28 @@ async function run(
 ) {
   const [command, ...rest] = args;
 
-  if (!command || command === "--help" || command === "-h" || command === "help") {
+  if (
+    !command ||
+    command === "--help" ||
+    command === "-h" ||
+    command === "help"
+  ) {
     io.out(HELP);
     return 0;
   }
 
-  if (command === "--version" || command === "-v" || command === "version") {
+  if (
+    command === "--version" ||
+    command === "-v" ||
+    command === "version"
+  ) {
     io.out(packageInfo.version);
     return 0;
   }
 
   if (command === "create") {
     const [projectName, ...extra] = rest;
+
     if (!projectName || extra.length > 0) {
       io.error("Usage: mangani create <project-name>");
       return 1;
@@ -81,13 +95,21 @@ async function run(
     try {
       const { port } = parseDevArgs(rest);
       const start = options.startDevServer || startDevServer;
-      const result = await start({ cwd: options.cwd || process.cwd(), port });
+
+      const result = await start({
+        cwd: options.cwd || process.cwd(),
+        port,
+        onReload: options.onReload,
+        onWatchError: options.onWatchError
+      });
 
       io.out(`MANGANI ${packageInfo.version}`);
       io.out("Development server running");
       io.out("");
-      io.out(`Local: ${result.url}`);
-      io.out(`Entry: ${result.project.entryRelative}`);
+      io.out(`Local:  ${result.url}`);
+      io.out(`Entry:  ${result.project.entryRelative}`);
+      io.out(`Watch:  ${result.watch || "src"}`);
+      io.out("Reload: enabled");
       io.out("");
       io.out("Press Ctrl+C to stop.");
       return 0;
@@ -105,14 +127,18 @@ async function run(
 
     try {
       const build = options.buildProject || buildProject;
-      const result = await build({ cwd: options.cwd || process.cwd() });
+      const result = await build({
+        cwd: options.cwd || process.cwd()
+      });
 
       io.out(`MANGANI ${packageInfo.version}`);
       io.out("");
       io.out(`Built ${result.project}`);
       io.out("");
       io.out(`Entry:  ${result.entry}`);
-      io.out(`Output: ${result.output}${result.output.endsWith("/") ? "" : "/"}`);
+      io.out(
+        `Output: ${result.output}${result.output.endsWith("/") ? "" : "/"}`
+      );
       io.out("");
       io.out("Build complete.");
       return 0;

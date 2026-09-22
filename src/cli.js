@@ -1,18 +1,24 @@
 "use strict";
 
 const packageInfo = require("../package.json");
+const { buildProject } = require("./build-project");
 const { createProject } = require("./create-project");
+const { DEFAULT_PORT, parsePort, startDevServer } = require("./dev-server");
 
 const HELP = `MANGANI ${packageInfo.version}
 Build here. Build with less.
 
 Usage:
   mangani create <project-name>
+  mangani dev [--port <port>]
+  mangani build
   mangani --help
   mangani --version
 
 Commands:
   create    Create a dependency-free starter project
+  dev       Serve the current MANGANI project locally
+  build     Create safe static production output
 `;
 
 function defaultIO() {
@@ -22,12 +28,22 @@ function defaultIO() {
   };
 }
 
+function parseDevArgs(args) {
+  if (args.length === 0) return { port: DEFAULT_PORT };
+
+  if (args.length === 2 && args[0] === "--port") {
+    return { port: parsePort(args[1]) };
+  }
+
+  throw new Error("Usage: mangani dev [--port <port>]");
+}
+
 async function run(
   args = process.argv.slice(2),
   io = defaultIO(),
   options = {}
 ) {
-  const [command, projectName, ...extra] = args;
+  const [command, ...rest] = args;
 
   if (!command || command === "--help" || command === "-h" || command === "help") {
     io.out(HELP);
@@ -40,6 +56,7 @@ async function run(
   }
 
   if (command === "create") {
+    const [projectName, ...extra] = rest;
     if (!projectName || extra.length > 0) {
       io.error("Usage: mangani create <project-name>");
       return 1;
@@ -52,7 +69,52 @@ async function run(
 
       io.out(`Created ${projectName}`);
       io.out(`Location: ${projectPath}`);
-      io.out(`Open: ${projectName}/src/index.html`);
+      io.out(`Next: cd ${projectName} && mangani dev`);
+      return 0;
+    } catch (error) {
+      io.error(`MANGANI: ${error.message}`);
+      return 1;
+    }
+  }
+
+  if (command === "dev") {
+    try {
+      const { port } = parseDevArgs(rest);
+      const start = options.startDevServer || startDevServer;
+      const result = await start({ cwd: options.cwd || process.cwd(), port });
+
+      io.out(`MANGANI ${packageInfo.version}`);
+      io.out("Development server running");
+      io.out("");
+      io.out(`Local: ${result.url}`);
+      io.out(`Entry: ${result.project.entryRelative}`);
+      io.out("");
+      io.out("Press Ctrl+C to stop.");
+      return 0;
+    } catch (error) {
+      io.error(`MANGANI: ${error.message}`);
+      return 1;
+    }
+  }
+
+  if (command === "build") {
+    if (rest.length > 0) {
+      io.error("Usage: mangani build");
+      return 1;
+    }
+
+    try {
+      const build = options.buildProject || buildProject;
+      const result = await build({ cwd: options.cwd || process.cwd() });
+
+      io.out(`MANGANI ${packageInfo.version}`);
+      io.out("");
+      io.out(`Built ${result.project}`);
+      io.out("");
+      io.out(`Entry:  ${result.entry}`);
+      io.out(`Output: ${result.output}${result.output.endsWith("/") ? "" : "/"}`);
+      io.out("");
+      io.out("Build complete.");
       return 0;
     } catch (error) {
       io.error(`MANGANI: ${error.message}`);
@@ -67,5 +129,6 @@ async function run(
 
 module.exports = {
   HELP,
+  parseDevArgs,
   run
 };

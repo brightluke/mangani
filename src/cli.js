@@ -8,6 +8,7 @@ const {
   parsePort,
   startDevServer
 } = require("./dev-server");
+const { generate } = require("./generate");
 
 const HELP = `MANGANI ${packageInfo.version}
 Build here. Build with less.
@@ -16,13 +17,15 @@ Usage:
   mangani create <project-name>
   mangani dev [--port <port>]
   mangani build
+  mangani generate <page|component> <name>
   mangani --help
   mangani --version
 
 Commands:
-  create    Create a dependency-free starter project
-  dev       Serve, watch and live-reload the current project
-  build     Create safe static production output
+  create     Create a dependency-free starter project
+  dev        Serve, watch and live-reload the current project
+  build      Create safe static production output
+  generate   Add a safe page or component to the current project
 `;
 
 function defaultIO() {
@@ -141,6 +144,33 @@ async function run(
       );
       io.out("");
       io.out("Build complete.");
+      return 0;
+    } catch (error) {
+      io.error(`MANGANI: ${error.message}`);
+      return 1;
+    }
+  }
+
+  if (command === "generate") {
+    const [type, name, ...extra] = rest;
+
+    if (!type || !name || extra.length > 0) {
+      io.error(
+        "Usage: mangani generate <page|component> <name>"
+      );
+      return 1;
+    }
+
+    try {
+      const generateItem = options.generate || generate;
+      const result = await generateItem(type, name, {
+        cwd: options.cwd || process.cwd()
+      });
+
+      io.out(
+        `Generated ${result.type} ${result.name}`
+      );
+      io.out(`Location: ${result.relativePath}`);
       return 0;
     } catch (error) {
       io.error(`MANGANI: ${error.message}`);

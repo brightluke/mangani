@@ -6,7 +6,7 @@ const path = require("node:path");
 const { loadProject } = require("./project");
 const { titleFromName } = require("./template");
 
-const VALID_GENERATOR_NAME = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
+const VALID_GENERATOR_NAME = /^[A-Za-z0-9][A-Za-z0-9_-]*$/;
 const GENERATOR_TYPES = new Set(["page", "component"]);
 
 function validateGeneratorType(type) {
@@ -34,7 +34,7 @@ function validateGeneratorName(name) {
     name === ".."
   ) {
     throw new Error(
-      "Generator name may contain letters, numbers, dots, hyphens and underscores, and must start with a letter or number."
+      "Generator name may contain letters, numbers, hyphens and underscores, and must start with a letter or number."
     );
   }
 

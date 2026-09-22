@@ -14,7 +14,7 @@ const DEV_RUNTIME = `<script data-mangani-live-reload>
 </script>`;
 
 function injectLiveReload(html) {
-  const closingBody = /<\\/body\\s*>/i;
+  const closingBody = /<\/body\s*>/i;
   if (closingBody.test(html)) {
     return html.replace(closingBody, `${DEV_RUNTIME}\n</body>`);
   }

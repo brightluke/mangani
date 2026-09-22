@@ -17,13 +17,25 @@ const {
   injectLiveReload
 } = require("./src/live-reload");
 const { loadProject } = require("./src/project");
+const {
+  DEFAULT_TEMPLATE,
+  createTemplate,
+  getTemplate,
+  hasTemplate,
+  listTemplates
+} = require("./src/templates");
 
 module.exports = {
+  DEFAULT_TEMPLATE,
   buildProject,
   createLiveReload,
   createProject,
+  createTemplate,
   generate,
+  getTemplate,
+  hasTemplate,
   injectLiveReload,
+  listTemplates,
   loadProject,
   run,
   startDevServer,

@@ -1,6 +1,6 @@
 {
   "name": "@bmk24/mangani",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A lightweight, offline-first project builder from BMK24.",
   "main": "index.js",
   "bin": {
@@ -15,7 +15,7 @@
   "scripts": {
     "start": "node ./bin/mangani.js",
     "test": "node --test",
-    "check": "node --check ./bin/mangani.js && node --check ./index.js && node --check ./src/cli.js && node --check ./src/create-project.js && node --check ./src/template.js && node --check ./src/project.js && node --check ./src/dev-server.js && node --check ./src/build-project.js"
+    "check": "node --check ./bin/mangani.js && node --check ./index.js && node --check ./src/cli.js && node --check ./src/create-project.js && node --check ./src/template.js && node --check ./src/project.js && node --check ./src/dev-server.js && node --check ./src/live-reload.js && node --check ./src/build-project.js"
   },
   "keywords": [
     "bmk24",

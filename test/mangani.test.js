@@ -50,7 +50,8 @@ test("prints help and version", async () => {
     help.out.join("\n"),
     /Build here\. Build with less\./
   );
-  assert.match(help.out.join("\n"), /live-reload/);\n  assert.match(help.out.join("\n"), /generate/);
+  assert.match(help.out.join("\\n"), /live-reload/);
+  assert.match(help.out.join("\\n"), /generate/);
 
   const version = captureIO();
   assert.equal(await run(["--version"], version.io), 0);

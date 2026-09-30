@@ -5,6 +5,10 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   verify:
@@ -27,3 +31,62 @@ jobs:
 
       - name: Test
         run: npm test
+
+      - name: Verify packed installation
+        run: npm run verify:package
+
+  release:
+    needs: verify
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: mangani-release
+      cancel-in-progress: false
+    steps:
+      - name: Checkout verified commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Publish verified GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version=$(node -p 'require("./package.json").version')
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          tag="v$version"
+          notes="docs/releases/$tag.md"
+          test -s "$notes"
+          # Query the complete release list: API/auth failures must stop the job.
+          releases=$(gh api --paginate "repos/$GITHUB_REPOSITORY/releases?per_page=100" --jq '.[].tag_name')
+          if grep -Fxq "$tag" <<< "$releases"; then
+            echo "Release $tag already exists; leaving it unchanged."
+            exit 0
+          fi
+          if git rev-parse --verify "refs/tags/$tag" >/dev/null 2>&1; then
+            test "$(git rev-list -n 1 "$tag")" = "$GITHUB_SHA" || {
+              echo "Tag $tag points to another commit; refusing to move it."
+              exit 1
+            }
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git tag -a "$tag" "$GITHUB_SHA" -m "MANGANI $tag"
+            git push origin "refs/tags/$tag"
+          fi
+          npm pack --ignore-scripts --json > "$RUNNER_TEMP/mangani-pack.json"
+          archive=$(node -p 'require(process.env.RUNNER_TEMP + "/mangani-pack.json")[0].filename')
+          sha256sum "$archive" > "$archive.sha256"
+          title=$(head -n 1 "$notes")
+          title=${title#\# }
+          gh release create "$tag" "$archive" "$archive.sha256" \
+            --verify-tag --title "$title" --notes-file "$notes"

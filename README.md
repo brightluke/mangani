@@ -19,6 +19,38 @@ dashboard
 
 The default remains `basic`.
 
+## Install
+
+Requires Node.js 20 or newer and npm.
+
+From a GitHub source checkout (requires Git and Internet for the clone):
+
+```sh
+git clone https://github.com/brightluke/mangani.git
+cd mangani
+npm run check
+npm test
+npm run verify:package
+npm install --global .
+mangani --version
+```
+
+For the versioned release, download `bmk24-mangani-0.5.0.tgz` from
+[GitHub Releases](https://github.com/brightluke/mangani/releases/tag/v0.5.0), then:
+
+```sh
+npm install --global ./bmk24-mangani-0.5.0.tgz
+mangani --version
+```
+
+The tarball contains the CLI, public API and both templates. Once downloaded,
+installation can run offline with `npm install --global --offline ./bmk24-mangani-0.5.0.tgz`.
+Generated projects need no dependency installation.
+
+**npm registry status (2026-09-30):** the public registry returned 404 for
+`@bmk24/mangani`. Use the GitHub installation methods above. A GitHub release
+is separate from npm registry publication.
+
 ## Create a basic project
 
 These commands are equivalent:
@@ -168,3 +200,19 @@ MANGANI began as ZeeJS. The final pre-rebuild state is preserved in Git as `zeej
 ## License
 
 MIT © 2026 Bright Musanya / BMK24
+
+## Release process
+
+CI verifies syntax, source tests and an actual offline installation of the packed
+package on Node.js 20 and 24. Pull requests only run verification.
+
+After a push to `main` passes both jobs, CI reads the version from `package.json`.
+If that version has no GitHub Release, it requires `docs/releases/v<VERSION>.md`,
+creates an annotated `v<VERSION>` tag at the verified commit, and publishes a
+GitHub Release with the npm tarball and SHA-256 checksum. Existing releases are
+left unchanged. A conflicting tag stops publication. The workflow can also be
+run manually on `main` to retry a failed release.
+
+For the next release, update `package.json` and add matching release notes in the
+same reviewed change. npm registry publication is a separate authenticated step
+and is not performed by this workflow.
